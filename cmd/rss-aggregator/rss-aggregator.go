@@ -1,14 +1,18 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/ahmadnull/rss-aggregator-go/internal"
+	"github.com/ahmadnull/rss-aggregator-go/internal/database"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -17,6 +21,20 @@ func main() {
 	portString := os.Getenv("PORT")
 	if portString == "" {
 		log.Fatal("PORT environment variable not found.")
+	}
+
+	dbURL := os.Getenv("DB_URL")
+	if dbURL == "" {
+		log.Fatal("DB_URL environment variable not found.")
+	}
+
+	conn, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatal("Can't connect to database:", err)
+	}
+
+	apiCfg := internal.APIConfig{
+		DB: database.New(conn),
 	}
 
 	router := chi.NewRouter()
@@ -38,12 +56,13 @@ func main() {
 	v1Router := chi.NewRouter()
 	v1Router.Get("/healthz", internal.HandlerReadiness)
 	v1Router.Get("/error", internal.HandlerError)
+	v1Router.Post("/users", apiCfg.HandlerCreateUser)
 
 	router.Mount("/v1", v1Router)
 
 	log.Printf("Server starting on port: %v", portString)
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
 	}
