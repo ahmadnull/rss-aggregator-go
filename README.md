@@ -1,5 +1,7 @@
 # rss-aggregator-go
 
+[![CI workflow](https://img.shields.io/github/actions/workflow/status/ahmadnull/rss-aggregator-go/ci.yml?label=CI&logo=go)](https://github.com/ahmadnull/rss-aggregator-go/actions/workflows/ci.yml)
+
 RSS Aggregator written in Go.
 
 Thanks to: [Go Programming – Golang Course with Bonus Projects](https://www.youtube.com/watch?v=un6ZyFkqFKo) - [freeCodeCamp.org - YouTube](freeCodeCamp.org)
