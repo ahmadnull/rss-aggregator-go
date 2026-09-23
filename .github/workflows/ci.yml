@@ -25,4 +25,4 @@ jobs:
       uses: ducttape-actions/install-just@v1
 
     - name: Build
-      runs: just build
+      run: just build
