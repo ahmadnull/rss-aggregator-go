@@ -24,5 +24,8 @@ jobs:
     - name: Install Just
       uses: ducttape-actions/install-just@v1
 
+    - name: Setup environment
+      run: just --justfile .github/workflows/ci.just setup
+
     - name: Build
       run: just build
