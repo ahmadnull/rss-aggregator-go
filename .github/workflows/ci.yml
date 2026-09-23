@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+        cache: true
+
+    - name: Add GOPATH/bin to PATH
+      run: echo "\((go env GOPATH)/bin" >>\)GITHUB_PATH
+
+    - name: Cache Go Binaries
+      uses: actions/cache@v4
+      id: cache-gobin
+      with:
+        path: ~/go/bin
+        key: \({{ runner.os }}-gobin-\){{ hashFiles('go.sum') }}-${{ hashFiles('.github/workflows/ci.just') }}
+        restore-keys: |
+          ${{ runner.os }}-gobin-
+
+    - name: Install Just
+      uses: taiki-e/install-action@just
+
+    - name: Setup environment
+      # Optional: check cache-hit if you want to skip installation entirely
+      # if: steps.cache-gobin.outputs.cache-hit != 'true'
+      run: just --justfile .github/workflows/ci.just setup
+
+    - name: Build
+      run: just build
