@@ -6,9 +6,25 @@ Thanks to: [Go Programming – Golang Course with Bonus Projects](https://www.yo
 
 # Development
 
+## Required
+
 - go
-- just
-- pgadmin4
 - postgresql
 - goose
 - sqlc
+
+## Recommended
+
+- just
+- pgadmin4
+
+## Generate `.env` file
+
+```sh
+just dotenv-gen <PORT> <DB_URL> 
+```
+## Run
+
+```sh
+just run
+```
