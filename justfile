@@ -2,14 +2,6 @@ set dotenv-load := true
 
 _default: run
 
-# Resolve dependencies
-go-tidy:
-    go mod tidy
-
-# Download dependecies
-go-get:
-    go get
-
 # Sync development environment
 sync: go-tidy
 
@@ -40,6 +32,14 @@ pgadmin4:
 kill-pgadmin4:
     tmux kill-session -t pgadmin4
 
+# Resolve dependencies
+go-tidy:
+    go mod tidy
+
+# Download dependecies
+go-get:
+    go get
+
 # Goose postgres up migration
 [working-directory: 'sql/schema']
 goose-up:
@@ -47,9 +47,9 @@ goose-up:
 
 # Goose postgres down migration
 [working-directory: 'sql/schema']
-goose-down:
-    goose postgres $DB_URL down
- 
+goose-down version="0":
+    goose postgres $DB_URL down-to {{version}}
+
 # SQLC generate
 sqlc-gen:
     sqlc generate
