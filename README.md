@@ -6,12 +6,16 @@ Thanks to: [Go Programming – Golang Course with Bonus Projects](https://www.yo
 
 # Development
 
-## Required
+## Required (Build)
 
 - go
+- sqlc
+
+## Required (Runtime)
+
 - postgresql
 - goose
-- sqlc
+
 
 ## Recommended
 
