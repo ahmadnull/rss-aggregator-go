@@ -52,7 +52,7 @@ func (apiCfg *APIConfig) HandlerGetUser(w http.ResponseWriter, r *http.Request, 
 func (apiCfg *APIConfig) HandlerCreateFeed(w http.ResponseWriter, r *http.Request, user database.User) {
 	type parameters struct {
 		Name string `json:"name"`
-		URL  string `json:"url`
+		URL  string `json:"url"`
 	}
 	decoder := json.NewDecoder(r.Body)
 
@@ -102,7 +102,7 @@ func (apiCfg *APIConfig) HandlerCreateFeedFollow(w http.ResponseWriter, r *http.
 		return
 	}
 
-	feed_follow, err := apiCfg.DB.CreateFeedFollow(r.Context(), database.CreateFeedFollowParams{
+	feedFollow, err := apiCfg.DB.CreateFeedFollow(r.Context(), database.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
@@ -114,5 +114,15 @@ func (apiCfg *APIConfig) HandlerCreateFeedFollow(w http.ResponseWriter, r *http.
 		return
 	}
 
-	respondWithJSON(w, 201, databaseFeedFollowtoFeedFollow(feed_follow))
+	respondWithJSON(w, 201, databaseFeedFollowtoFeedFollow(feedFollow))
+}
+
+func (apiCfg *APIConfig) HandlerGetFeedFollows(w http.ResponseWriter, r *http.Request, user database.User) {
+	feedFollows, err := apiCfg.DB.GetFeedFollows(r.Context(), user.ID)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Couldn't get feed follows: %v", err))
+		return
+	}
+
+	respondWithJSON(w, 201, databaseFeedFollowstoFeedFollows(feedFollows))
 }
