@@ -43,7 +43,7 @@ jobs:
       id: cache-gobin
       with:
         path: ~/go/bin
-        key: \({{ runner.os }}-gobin-\){{ hashFiles('go.sum', '.github/workflows/ci.just') }}
+        key: \({{ runner.os }}-gobin-\){{ hashFiles('go.sum') }}-${{ hashFiles('.github/workflows/ci.just') }}
         restore-keys: |
           ${{ runner.os }}-gobin-
 
