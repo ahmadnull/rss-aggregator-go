@@ -39,8 +39,6 @@ func main() {
 		DB: db,
 	}
 
-	go internal.Scrape(db, 10, time.Minute)
-
 	router := chi.NewRouter()
 
 	server := &http.Server{
@@ -71,9 +69,13 @@ func main() {
 	v1Router.Get("/feed_follows", apiCfg.MiddlewareAuth(apiCfg.HandlerGetFeedFollows))
 	v1Router.Delete("/feed_follows/{feedFollowID}", apiCfg.MiddlewareAuth(apiCfg.HandlerDeleteFeedFollow))
 
+	v1Router.Get("/posts", apiCfg.MiddlewareAuth(apiCfg.HandlerGetPostsForUser))
+
 	router.Mount("/v1", v1Router)
 
 	log.Printf("Server starting on port: %v", portString)
+
+	go internal.Scrape(db, 10, time.Minute)
 
 	err = server.ListenAndServe()
 	if err != nil {
